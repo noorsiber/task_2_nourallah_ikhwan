@@ -14,7 +14,6 @@ class AuthController extends Controller
 {
     public function register(Request $request)  {
         $fields = $request->validate([
-            'name' => 'required|string',
             'username' => 'required|string|unique:users,username',
             'phone_number' => 'required|integer|unique:users,phone_number',
             'email' => 'required|string|unique:users,email',
@@ -42,11 +41,10 @@ class AuthController extends Controller
     // return back()->with('error', 'File upload failed');
 
         $user = User::create([
-            'name' => $fields['name'],
             'username' => $fields['username'],
             'phone_number' => $fields['phone_number'],
             'email' => $fields['email'],
-            'password' => bcrypt($fields['email']),
+            'password' => bcrypt($fields['password']),
             'profile_picture' => $fields['profile_picture'],
             'certificate' => $fields['certificate']
         ]);
@@ -63,7 +61,7 @@ class AuthController extends Controller
             // 'token' => $token,
             'token' => $accessToken->plainTextToken,
             'refresh_token' => $refreshToken->plainTextToken,
-            'profile_picture' => $fields['profile_picture']
+            // 'profile_picture' => $fields['profile_picture']
         ];
 
         return response($response, 201);
@@ -84,6 +82,20 @@ class AuthController extends Controller
                 'message' => 'Bad credentials'
             ], 401);
         }
+
+        $accessToken = $user->createToken('access_token', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')));
+        $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')));
+
+        $response = [
+            'user' => $user,
+            // 'token' => $token,
+            'token' => $accessToken->plainTextToken,
+            'refresh_token' => $refreshToken->plainTextToken,
+            // 'profile_picture' => $fields['profile_picture']
+        ];
+
+        return response($response, 201);
+        return response($response,201);
     }
     
     public function logout(Request $request) {
