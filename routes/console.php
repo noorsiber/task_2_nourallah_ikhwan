@@ -1,7 +1,22 @@
 <?php
 
 use Illuminate\Foundation\Inspiring;
+use App\Mail\WelcomeMail;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Mail;
+
+/*
+|--------------------------------------------------------------------------
+| Console Routes
+|--------------------------------------------------------------------------
+|
+*/
+
+Artisan::command('send-welcome-mail', function () {
+    Mail::to('testreceiver@gmail.com')->send(new WelcomeMail("Jon"));
+    // Also, you can use a specific mailer if your default mailer is not "mailtrap", but you want to use it for welcome emails
+    // Mail::mailer('mailtrap')->to('testreceiver@gmail.com')->send(new WelcomeMail("Jon"));
+})->purpose('Send welcome mail');
 
 /*
 |--------------------------------------------------------------------------

@@ -11,6 +11,10 @@
 |
 */
 
+use App\Http\Middleware\Verify2FAMiddlware;
+use GuzzleHttp\Middleware;
+use Illuminate\Console\Application;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );

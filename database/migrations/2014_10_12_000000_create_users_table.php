@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->integer('phone_number');
             $table->string('username');
-            $table->string('profile_picture');
-            $table->string('certificate');
+            $table->string('profile_picture')->nullable();
+            $table->string('certificate')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            $table->integer('two_factor_code')->nullable();
+            $table->string('two_factor_secret')->nullable();
+            $table->boolean('two_factor_enabled')->default(false);      
         });
     }
 

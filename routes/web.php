@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TwoFactorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,4 +27,10 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::middleware('auth','twofactor')->group(function (){
+    
+    // Route::get('two-factor', [TwoFactorController::class, 'index'])->name('two-factor.index');
+    // Route::post('two-factor', [TwoFactorController::class, 'verify'])->name('two-factor.verify');
 });
