@@ -23,6 +23,7 @@ enum TokenAbility: string
     case ACCESS_API = 'access-api';
 }
 
+//auth routes
 //refresh token route using middleware
 Route::middleware('auth:sanctum', 'ability:' . TokenAbility::ISSUE_ACCESS_TOKEN->value)->group(function () {
     Route::get('/auth/refresh-token', [AuthController::class, 'refreshToken']);
@@ -31,26 +32,17 @@ Route::middleware('auth:sanctum', 'ability:' . TokenAbility::ISSUE_ACCESS_TOKEN-
 Route::middleware('auth:sanctum', 'ability:' . TokenAbility::ACCESS_API->value)->get('/me', function (Request $request) {
     return $request->user();
 });
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-//public routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/test-mailtrap', [EmailController::class, 'sendTestEmail']);
-Route::post('/verify-token', [AuthController::class, 'verifyTwoFactor']);
-Route::middleware('auth:sanctum')->post('/enable-2fa', [AuthController::class, 'enableTwoFactorAuthentication']);
-
-
-
 Route::middleware('auth:sanctum')->get('/test-user', function (Request $request) {
     return response()->json($request->user());
 });
-
+Route::middleware('auth:sanctum')->post('/verify-token', [AuthController::class, 'verifyTwoFactor']);
+Route::middleware('auth:sanctum')->post('/enable-2fa', [AuthController::class, 'enableTwoFactorAuthentication']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
 });
 
+//public routes
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/test-mailtrap', [EmailController::class, 'sendTestEmail']);

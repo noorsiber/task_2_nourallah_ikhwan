@@ -22,8 +22,9 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            $table->string('two_factor_secret')->nullable();
-            $table->boolean('two_factor_enabled')->default(false);      
+            $table->string('verification_code')->nullable();
+            $table->boolean('two_factor_enabled')->default(false);   
+            $table->timestamp('verification_code_expires_at')->nullable();   
         });
     }
 

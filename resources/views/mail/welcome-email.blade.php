@@ -1,4 +1,3 @@
-Hey, {{$name}} and welcome 😉
-
+Hello, {{ $name }}
 <br>
-Funny Coder
+it's nice having you here 😉

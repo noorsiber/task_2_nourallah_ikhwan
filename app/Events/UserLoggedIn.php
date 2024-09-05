@@ -10,16 +10,20 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserRegistered
+class UserLoggedIn
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $user;
+    public $token;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct($user,$token)
     {
-        //
+        $this->user = $user;
+        $this->token = $token;
     }
 
     /**

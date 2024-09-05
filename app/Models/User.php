@@ -3,14 +3,11 @@
 namespace App\Models;
 
 use GuzzleHttp\Psr7\Request;
-use PragmaRX\Google2FA\Support\QRCode;
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens; // Import the trait
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use PragmaRX\Google2FA\Google2FA; // Import Google2FA
 
 
 class User extends Authenticatable
@@ -29,7 +26,7 @@ class User extends Authenticatable
         'password',
         'profile_picture',
         'certificate',
-        'two_factor_secret',
+        'verification_code',
         'two_factor_enabled',
     ];
 
@@ -59,7 +56,7 @@ class User extends Authenticatable
     $google2fa = app('pragmarx.google2fa'); // Use the app helper to get the instance
 
     // Generate the 2FA secret and set it on the user model
-    $user->two_factor_secret = $google2fa->generateSecretKey();
+    $user->verification_code = $google2fa->generateSecretKey();
     $user->two_factor_enabled = true;
 
     
@@ -68,7 +65,7 @@ class User extends Authenticatable
         $qrCodeUrl = $google2fa->getQRCodeUrl(
             config('app.name'),
             $user->email,
-            $user->two_factor_secret
+            $user->verification_code
         );
 
         return response()->json(['qrCodeUrl' => $qrCodeUrl], 200);
@@ -78,6 +75,6 @@ class User extends Authenticatable
 }
     public function verifyTwoFactorToken($token)
     {
-        return $this->two_factor_secret === $token;
+        return $this->verification_code === $token;
     }
 }
